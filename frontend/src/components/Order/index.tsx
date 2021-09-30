@@ -11,38 +11,18 @@ export function Order() {
   const { id }: any = useParams();
   const [order, setOrder] = React.useState<OrderType>({
     id,
-    // @todo: load from api
     paid: false,
   });
 
-  const [items, setItems] = React.useState<Array<OrderItemType>>([
-    {
-      id: 1,
-      title: "product title #1",
-      price: 1.11,
-      image: "/images/400.png",
-      quantity: 1,
-      comment: "",
-    },
-    {
-      id: 4,
-      title: "product title #4",
-      price: 4.44,
-      image: "/images/400.png",
-      quantity: 1,
-      comment: "",
-    },
-  ]);
+  const [items, setItems] = React.useState<Array<OrderItemType>>([]);
 
-  // @todo: uncomment to load from api
-  // React.useEffect(() => {
-  //   fetchOrder(id).then((response: any) => {
-  //     setOrder({ ...order, paid: response.data.paid });
-  //     setItems(response.data.items);
-  //   });
-  // }, []);
+  React.useEffect(() => {
+    fetchOrder(id).then((response: any) => {
+      setOrder({ ...response.data, paid: response.data.paid });
+      setItems(response.data.products);
+    });
+  }, [id]);
 
-  // @todo: load from api
   const total = items.reduce(
     (acc: number, curr: OrderItemType) => acc + curr.price * curr.quantity,
     0
@@ -58,9 +38,14 @@ export function Order() {
       <Typography variant="h3" align="center" sx={{ p: 4 }}>
         <Currency value={total} />
       </Typography>
+      {!!order.paid && (
+        <Typography variant="h5" align="center" sx={{ p: 4 }}>
+          Pago
+        </Typography>
+      )}
       <PayButton
         id={id}
-        disabled={order.paid}
+        disabled={!!order.paid}
         onPay={() => setOrder((order: OrderType) => ({ ...order, paid: true }))}
       />
     </>

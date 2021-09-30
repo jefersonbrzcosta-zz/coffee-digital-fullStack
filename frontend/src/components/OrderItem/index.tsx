@@ -21,7 +21,11 @@ export function OrderItem({
           <img src={image} width={50} alt="" />
         </ListItemAvatar>
       </Badge>
-      <ListItemText primary={title} secondary={comment} />
+      <ListItemText
+        primary={title}
+        secondary={comment}
+        style={{ marginLeft: 30 }}
+      />
       <Currency value={price} />
     </ListItem>
   );
